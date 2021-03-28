@@ -131,6 +131,12 @@ module boom_connector() {
     // TODO
 }
 
+// To be used to quickly print a prototype to be used for
+// calibration purposes and tolerance investigations.
+module debug_tolerances_boom_and_holes() {
+    // TODO
+}
+
 //------------------------------------------------
 // Actual script
 
