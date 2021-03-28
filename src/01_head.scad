@@ -36,6 +36,9 @@ ANTENNA_ELEMENT_HOLDER_LENGTH = 55.0;
 ANTENNA_ELEMENT_HOLDER_THICKNESS = 15.0;
 ANTENNA_ELEMENT_SIDE_DISPLACEMENT = 12.5;
 
+// Cables holes
+CABLE_HOLE_RADIUS = 7.0;
+
 // Body
 CYLINDER_RADIUS_INNER = 30.0;
 CYLINDER_SIDE_THICKNESS = 15.0;
@@ -100,8 +103,22 @@ module antenna_elements_holes(hole_length, hole_radius, height, displacement) {
 }
 
 // To be subtracted from the assembly
-module cable_holes() {
-    // TODO
+module cable_holes(hole_radius, displacement, height) {
+    rotate([0, 0, 45])
+    translate([displacement, 0, height/2])
+    cylinder(h = height, r = hole_radius, center = true);
+    
+    rotate([0, 0, 135])
+    translate([displacement, 0, height/2])
+    cylinder(h = height, r = hole_radius, center = true);
+
+    rotate([0, 0, 225])
+    translate([displacement, 0, height/2])
+    cylinder(h = height, r = hole_radius, center = true);
+
+    rotate([0, 0, 315])
+    translate([displacement, 0, height/2])
+    cylinder(h = height, r = hole_radius, center = true);
 }
 
 // To be subtracted from the assembly
@@ -119,10 +136,16 @@ module boom_connector() {
 
 side_displacement = CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2 + ANTENNA_ELEMENT_SIDE_DISPLACEMENT;
 
-difference() {
-    union() {
-        cylinder_body(CYLINDER_RADIUS_INNER, CYLINDER_SIDE_THICKNESS, CYLINDER_INNER_HEIGHT, CYLINDER_BASE_THICKNESS);
-        antenna_holders_bodies(ANTENNA_ELEMENT_HOLDER_LENGTH, ANTENNA_ELEMENT_HOLDER_THICKNESS, CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS, side_displacement);
+if (DEBUG_MODE == 0) {
+    difference() {
+        union() {
+            cylinder_body(CYLINDER_RADIUS_INNER, CYLINDER_SIDE_THICKNESS, CYLINDER_INNER_HEIGHT, CYLINDER_BASE_THICKNESS);
+            antenna_holders_bodies(ANTENNA_ELEMENT_HOLDER_LENGTH, ANTENNA_ELEMENT_HOLDER_THICKNESS, CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS, side_displacement);
+        }
+        antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)/2, side_displacement);
+        cable_holes(CABLE_HOLE_RADIUS, CYLINDER_RADIUS_INNER - CABLE_HOLE_RADIUS, CYLINDER_BASE_THICKNESS);
     }
-    antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)/2, side_displacement);
+}
+else {
+    cable_holes(CABLE_HOLE_RADIUS, CYLINDER_RADIUS_INNER - CABLE_HOLE_RADIUS, CYLINDER_BASE_THICKNESS);
 }
