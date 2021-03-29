@@ -25,8 +25,8 @@ DEBUG_MODE = 0;
 // Variables
 
 // Screws
-// M3 screws - 1.5 + 8% tolerance
-SCREW_RADIUS = 1.62;
+// M3 screws - 1.5 + 5% tolerance
+SCREW_RADIUS = 1.575;
 SCREW_DEPTH = 20.0;
 
 // Antenna elements
