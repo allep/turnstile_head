@@ -25,13 +25,13 @@ DEBUG_MODE = 0;
 // Variables
 
 // Screws
-// M3 screws - 1.5 + 5% tolerance
-SCREW_RADIUS = 1.575;
+// M3 screws - 1.5 + 10% tolerance
+SCREW_RADIUS = 1.65;
 SCREW_DEPTH = 20.0;
 
 // Antenna elements
-// 4mm +5% tolerance
-ANENNA_ELEMENT_EXTERNAL_RADIUS = 4.2;
+// 4mm +10% tolerance
+ANENNA_ELEMENT_EXTERNAL_RADIUS = 4.4;
 
 ANTENNA_ELEMENT_HOLDER_LENGTH = 55.0;
 ANTENNA_ELEMENT_HOLDER_THICKNESS = 15.0;
@@ -48,7 +48,7 @@ CYLINDER_BASE_THICKNESS = 5.0;
 
 // Boom connector
 BOOM_CONNECTOR_HEIGHT = 30.0;
-BOOM_CONNECTOR_RADIUS = 10.65;
+BOOM_CONNECTOR_RADIUS = 10.90;
 BOOM_CONNECTOR_SCREW_HEIGHT = 20.0;
 
 //------------------------------------------------
@@ -180,7 +180,7 @@ module boom_connector(radius, height, screw_radius) {
 // 2. Screw holes
 // 3. Antenna element hole
 module debug_tolerances_boom_and_holes() {
-    height = BOOM_CONNECTOR_HEIGHT/2;
+    height = BOOM_CONNECTOR_HEIGHT/3;
     difference() {
         boom_connector(BOOM_CONNECTOR_RADIUS, height);
         // the antenna element hole
