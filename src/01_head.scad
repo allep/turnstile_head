@@ -25,13 +25,13 @@ DEBUG_MODE = 0;
 // Variables
 
 // Screws
-// M3 screws - 1.5 + 10% tolerance
-SCREW_RADIUS = 1.65;
+// M3 screws - 1.5 + 8% tolerance
+SCREW_RADIUS = 1.62;
 SCREW_DEPTH = 20.0;
 
 // Antenna elements
-// 4mm +10% tolerance
-ANENNA_ELEMENT_EXTERNAL_RADIUS = 4.4;
+// 4mm +8% tolerance
+ANENNA_ELEMENT_EXTERNAL_RADIUS = 4.32;
 
 ANTENNA_ELEMENT_HOLDER_LENGTH = 55.0;
 ANTENNA_ELEMENT_HOLDER_THICKNESS = 15.0;
@@ -43,11 +43,11 @@ CABLE_HOLE_RADIUS = 7.0;
 // Body
 CYLINDER_RADIUS_INNER = 30.0;
 CYLINDER_SIDE_THICKNESS = 10.0;
-CYLINDER_INNER_HEIGHT = 25.0;
+CYLINDER_INNER_HEIGHT = 17.5;
 CYLINDER_BASE_THICKNESS = 5.0;
 
 // Boom connector
-BOOM_CONNECTOR_HEIGHT = 30.0;
+BOOM_CONNECTOR_HEIGHT = 20.0;
 BOOM_CONNECTOR_RADIUS = 10.90;
 BOOM_CONNECTOR_SCREW_HEIGHT = 20.0;
 
@@ -182,7 +182,7 @@ module boom_connector(radius, height, screw_radius) {
 module debug_tolerances_boom_and_holes() {
     height = BOOM_CONNECTOR_HEIGHT/3;
     difference() {
-        boom_connector(BOOM_CONNECTOR_RADIUS, height);
+        boom_connector(BOOM_CONNECTOR_RADIUS, height, SCREW_RADIUS);
         // the antenna element hole
         cylinder(h = height, r = ANENNA_ELEMENT_EXTERNAL_RADIUS, center = true);
     }
@@ -196,7 +196,7 @@ if (DEBUG_MODE == 0) {
     side_displacement = CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2 + ANTENNA_ELEMENT_SIDE_DISPLACEMENT;
     
     translate([0, 0, BOOM_CONNECTOR_HEIGHT/2])
-    boom_connector(BOOM_CONNECTOR_RADIUS, BOOM_CONNECTOR_HEIGHT);
+    boom_connector(BOOM_CONNECTOR_RADIUS, BOOM_CONNECTOR_HEIGHT, SCREW_RADIUS);
     translate([0, 0, BOOM_CONNECTOR_HEIGHT])
     difference() {
         union() {
