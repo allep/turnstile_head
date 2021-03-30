@@ -199,19 +199,25 @@ module debug_tolerances_boom_and_holes() {
 if (DEBUG_MODE == 0) {
     // release mode
     side_displacement = CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2 + ANTENNA_ELEMENT_SIDE_DISPLACEMENT;
-    
-    translate([0, 0, BOOM_CONNECTOR_HEIGHT/2])
-    boom_connector(BOOM_CONNECTOR_RADIUS, BOOM_CONNECTOR_HEIGHT, SCREW_RADIUS);
-    translate([0, 0, BOOM_CONNECTOR_HEIGHT])
+
     difference() {
         union() {
-            cylinder_body(CYLINDER_RADIUS_INNER, CYLINDER_SIDE_THICKNESS, CYLINDER_INNER_HEIGHT, CYLINDER_BASE_THICKNESS);
-            antenna_holders_bodies(ANTENNA_ELEMENT_HOLDER_LENGTH, ANTENNA_ELEMENT_HOLDER_THICKNESS, CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS, side_displacement);
+            translate([0, 0, BOOM_CONNECTOR_HEIGHT/2])
+            boom_connector(BOOM_CONNECTOR_RADIUS, BOOM_CONNECTOR_HEIGHT, SCREW_RADIUS);
+            translate([0, 0, BOOM_CONNECTOR_HEIGHT])
+            difference() {
+                union() {
+                    cylinder_body(CYLINDER_RADIUS_INNER, CYLINDER_SIDE_THICKNESS, CYLINDER_INNER_HEIGHT, CYLINDER_BASE_THICKNESS);
+                    antenna_holders_bodies(ANTENNA_ELEMENT_HOLDER_LENGTH, ANTENNA_ELEMENT_HOLDER_THICKNESS, CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS, side_displacement);
+                }
+                antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)*1/2, side_displacement);
+                cable_holes(CABLE_HOLE_RADIUS, CYLINDER_RADIUS_INNER - CABLE_HOLE_RADIUS, CYLINDER_BASE_THICKNESS);
+                translate([0, 0, CYLINDER_BASE_THICKNESS + CYLINDER_INNER_HEIGHT - SCREW_DEPTH])
+                screw_holes(SCREW_RADIUS, SCREW_DEPTH, CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2, side_displacement);
+            }
         }
-        antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)*1/2, side_displacement);
-        cable_holes(CABLE_HOLE_RADIUS, CYLINDER_RADIUS_INNER - CABLE_HOLE_RADIUS, CYLINDER_BASE_THICKNESS);
-        translate([0, 0, CYLINDER_BASE_THICKNESS + CYLINDER_INNER_HEIGHT - SCREW_DEPTH])
-        screw_holes(SCREW_RADIUS, SCREW_DEPTH, CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2, side_displacement);
+        // boom reinforcement
+        translate([0, 0, BOOM_CONNECTOR_HEIGHT + CYLINDER_BASE_THICKNESS - SCREW_DEPTH/2])
         boom_reinforcement_screw_hole(SCREW_RADIUS, SCREW_DEPTH);
     }
 }
