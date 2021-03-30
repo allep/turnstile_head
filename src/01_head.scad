@@ -43,11 +43,11 @@ CABLE_HOLE_RADIUS = 7.0;
 // Body
 CYLINDER_RADIUS_INNER = 30.0;
 CYLINDER_SIDE_THICKNESS = 10.0;
-CYLINDER_INNER_HEIGHT = 17.5;
+CYLINDER_INNER_HEIGHT = 15.0;
 CYLINDER_BASE_THICKNESS = 5.0;
 
 // Boom connector
-BOOM_CONNECTOR_HEIGHT = 20.0;
+BOOM_CONNECTOR_HEIGHT = 30.0;
 BOOM_CONNECTOR_RADIUS = 10.90;
 BOOM_CONNECTOR_SCREW_HEIGHT = 20.0;
 
@@ -173,6 +173,11 @@ module boom_connector(radius, height, screw_radius) {
     }
 }
 
+// To be subtracted from the assembly
+module boom_reinforcement_screw_hole(screw_radius, height) {
+    cylinder(h = height, r = screw_radius, center = true);
+}
+
 // To be used to quickly print a prototype to be used for
 // calibration purposes and tolerance investigations.
 // Here we need to debug:
@@ -203,10 +208,11 @@ if (DEBUG_MODE == 0) {
             cylinder_body(CYLINDER_RADIUS_INNER, CYLINDER_SIDE_THICKNESS, CYLINDER_INNER_HEIGHT, CYLINDER_BASE_THICKNESS);
             antenna_holders_bodies(ANTENNA_ELEMENT_HOLDER_LENGTH, ANTENNA_ELEMENT_HOLDER_THICKNESS, CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS, side_displacement);
         }
-        antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)/2, side_displacement);
+        antenna_elements_holes(ANTENNA_ELEMENT_HOLDER_LENGTH, ANENNA_ELEMENT_EXTERNAL_RADIUS, (CYLINDER_INNER_HEIGHT + CYLINDER_BASE_THICKNESS)*1/2, side_displacement);
         cable_holes(CABLE_HOLE_RADIUS, CYLINDER_RADIUS_INNER - CABLE_HOLE_RADIUS, CYLINDER_BASE_THICKNESS);
         translate([0, 0, CYLINDER_BASE_THICKNESS + CYLINDER_INNER_HEIGHT - SCREW_DEPTH])
         screw_holes(SCREW_RADIUS, SCREW_DEPTH, CYLINDER_RADIUS_INNER + CYLINDER_SIDE_THICKNESS/2, side_displacement);
+        boom_reinforcement_screw_hole(SCREW_RADIUS, SCREW_DEPTH);
     }
 }
 else {
