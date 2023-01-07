@@ -1,13 +1,13 @@
 //------------------------------------------------
-// 1 - Turnstile Antenna head - actual head part
+// 1 - Turnstile Antenna Reflector holders
 //
-// author: Alessandro Paganelli 
+// author: Alessandro Paganelli, Alberto Trentadue
 // e-mail: alessandro.paganelli@gmail.com
 // github: https://github.com/allep
 // license: GPL-3.0-or-later
 // 
 // Description
-// This is the lower part of the antenna head.
+// This is the reflector holding part
 //
 // All sizes are expressed in mm.
 //------------------------------------------------
@@ -43,12 +43,13 @@ CABLE_HOLE_RADIUS = 7.0;
 // Body
 CYLINDER_RADIUS_INNER = 30.0;
 CYLINDER_SIDE_THICKNESS = 10.0;
-CYLINDER_INNER_HEIGHT = 15.0;
+CYLINDER_INNER_HEIGHT = 13.0;
 CYLINDER_BASE_THICKNESS = 3.0;
 
 // Boom connector
-BOOM_CONNECTOR_HEIGHT = 30.0;
-BOOM_CONNECTOR_RADIUS = 10.90;
+BOOM_CONNECTOR_HEIGHT = 20.0;
+BOOM_CONNECTOR_INNER_RADIUS = 12.50; 
+BOOM_CONNECTOR_OUTER_RADIUS = 15.0;
 BOOM_CONNECTOR_SCREW_HEIGHT = 20.0;
 
 //------------------------------------------------
@@ -132,25 +133,8 @@ module cable_holes(hole_radius, displacement, height) {
 
 // To be subtracted from the assembly
 module screw_holes(screw_radius, screw_depth, body_displacement, arm_displacement) {
-    // main body screw holes
     HOLE_VIS_CRR = 1;
     crr_screw_depth = screw_depth + HOLE_VIS_CRR;
-    
-    rotate([0, 0, 45])
-    translate([body_displacement, 0, crr_screw_depth/2])
-    cylinder(h = crr_screw_depth, r = screw_radius, center = true);
-    
-    rotate([0, 0, 135])
-    translate([body_displacement, 0, crr_screw_depth/2])
-    cylinder(h = crr_screw_depth, r = screw_radius, center = true);
-    
-    rotate([0, 0, 225])
-    translate([body_displacement, 0, crr_screw_depth/2])
-    cylinder(h = crr_screw_depth, r = screw_radius, center = true);
-    
-    rotate([0, 0, 315])
-    translate([body_displacement, 0, crr_screw_depth/2])
-    cylinder(h = crr_screw_depth, r = screw_radius, center = true);
     
     // arm screw holes
     rotate([0, 0, 0])
@@ -167,14 +151,15 @@ module screw_holes(screw_radius, screw_depth, body_displacement, arm_displacemen
 
     rotate([0, 0, 270])
     translate([arm_displacement, 0, crr_screw_depth/2])
-    cylinder(h = crr_screw_depth, r = screw_radius, center = true);    
+    cylinder(h = crr_screw_depth, r = screw_radius, center = true); 
+    
 }
 
 module boom_connector(radius, height, screw_radius) {
     difference() {
         cylinder(h = height, r = radius, center = true);
         
-        rotate([0, 90, 0])
+        rotate([0, 90, 45])
         cylinder(h = 2*radius, r = screw_radius, center = true);
     }
 }
@@ -193,7 +178,7 @@ module boom_reinforcement_screw_hole(screw_radius, height) {
 module debug_tolerances_boom_and_holes() {
     height = BOOM_CONNECTOR_HEIGHT/3;
     difference() {
-        boom_connector(BOOM_CONNECTOR_RADIUS, height, SCREW_RADIUS);
+        boom_connector(BOOM_CONNECTOR_INNER_RADIUS, height, SCREW_RADIUS);
         // the antenna element hole
         cylinder(h = height, r = ANENNA_ELEMENT_EXTERNAL_RADIUS, center = true);
     }
@@ -209,7 +194,7 @@ if (DEBUG_MODE == 0) {
     difference() {
         union() {
             translate([0, 0, BOOM_CONNECTOR_HEIGHT/2])
-            boom_connector(BOOM_CONNECTOR_RADIUS, BOOM_CONNECTOR_HEIGHT, SCREW_RADIUS);
+            boom_connector(BOOM_CONNECTOR_OUTER_RADIUS, BOOM_CONNECTOR_HEIGHT, SCREW_RADIUS);
             translate([0, 0, BOOM_CONNECTOR_HEIGHT])
             difference() {
                 union() {
@@ -223,9 +208,13 @@ if (DEBUG_MODE == 0) {
             }
         }
         // boom reinforcement
-        translate([0, 0, BOOM_CONNECTOR_HEIGHT + CYLINDER_BASE_THICKNESS - SCREW_DEPTH/2]) 
-        boom_reinforcement_screw_hole(SCREW_RADIUS, SCREW_DEPTH);
+        //translate([0, 0, BOOM_CONNECTOR_HEIGHT + CYLINDER_BASE_THICKNESS - SCREW_DEPTH/2]) 
+        //boom_reinforcement_screw_hole(SCREW_RADIUS, SCREW_DEPTH);
+        // boom hole
+        translate([0,0,BOOM_CONNECTOR_HEIGHT/2])
+    cylinder(h = BOOM_CONNECTOR_HEIGHT + 3 * CYLINDER_BASE_THICKNESS, r = BOOM_CONNECTOR_INNER_RADIUS, center = true);
     }
+
 }
 else {
     // debug mode
